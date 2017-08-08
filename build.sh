@@ -4,7 +4,7 @@ TEMPLATE_DESCRIPTOR_LIST=(
     "remill:llvm39,xed,gtest,glog,gflags,protobuf,capstone,cmake"
     "mcsema:llvm39,protobuf,cmake"
     "remill-experimental:llvm39,clang,gflags,glog,gtest,cmake"
-    "everything:xed,llvm,clang,gflags,gtest,protobuf,glog,capstone,cmake"
+    "everything:xed,llvm,clang,gflags,gtest,protobuf,glog,capstone,cmake,z3"
 )
 
 LIBRARY_LIST=(
@@ -17,6 +17,7 @@ LIBRARY_LIST=(
     "glog"
     "capstone"
     "cmake"
+    "z3"
 )
 
 DEFAULT_LLVM_VERSION=40
@@ -77,6 +78,9 @@ function main
 
         if [[ "$target_name" == "xed" ]] ; then
             InstallXED "${root_install_directory}/xed" || return 1
+
+        elif [[ "$target_name" == "z3" ]] ; then
+            InstallZ3 "${root_install_directory}/z3" || return 1
 
         elif [[ "$target_name" == "gflags" ]] ; then
             InstallGoogleGflags "${root_install_directory}/gflags" || return 1
@@ -689,6 +693,84 @@ function InstallGoogleProtocolBuffers
 
     unset LIBRARY_PATH
     unset LD_LIBRARY_PATH
+
+    return 0
+}
+
+function InstallZ3
+{
+    local z3_version="4.5.0"
+
+    if [ $# -ne 1 ] ; then
+        printf "Usage:\n"
+        printf "\tInstallZ3 /path/to/libraries"
+
+        return 1
+    fi
+
+    printf "\nZ3\n"
+
+    local install_directory="$1"
+    printf " > Install directory: ${install_directory}\n"
+
+    # acquire the source code
+    local tarball_name="z3-${z3_version}.tar.gz"
+
+    if [ ! -f "${tarball_name}" ] ; then
+        printf " > Acquiring the source code for Z3...\n"
+
+        rm "$LOG_FILE" 2> /dev/null
+        wget "https://github.com/Z3Prover/z3/archive/${tarball_name}" -O "${tarball_name}" >> "$LOG_FILE" 2>&1
+        if [ $? -ne 0 ] ; then
+            rm "${tarball_name}" 2> /dev/null
+
+            ShowLog
+            return 1
+        fi
+    fi
+
+    local source_folder_name="z3-z3-${z3_version}"
+
+    if [ ! -d "${source_folder_name}" ] ; then
+        printf " > Extracting the Z3 source code...\n"
+
+        rm "$LOG_FILE" 2> /dev/null
+        tar xzf "${tarball_name}" >> "$LOG_FILE" 2>&1
+        if [ $? -ne 0 ] ; then
+            rm -rf "${source_folder_name}" 2> /dev/null
+            rm "${tarball_name}" 2> /dev/null
+
+            ShowLog
+            return 1
+        fi
+    fi
+
+    printf " > Configuring...\n"
+
+    rm "$LOG_FILE" 2> /dev/null
+    ( cd "${source_folder_name}" && python2 "scripts/mk_make.py" --prefix="${install_directory}" ) >> "$LOG_FILE" 2>&1
+    if [ $? -ne 0 ] ; then
+        ShowLog
+        return 1
+    fi
+
+    printf " > Building...\n"
+
+    rm "$LOG_FILE" 2> /dev/null
+    ( cd "${source_folder_name}/build" && make -j "${PROCESSOR_COUNT}" ) >> "$LOG_FILE" 2>&1
+    if [ $? -ne 0 ] ; then
+        ShowLog
+        return 1
+    fi
+
+    printf " > Installing...\n"
+
+    rm "$LOG_FILE" 2> /dev/null
+    ( cd "${source_folder_name}/build" && make install ) >> "$LOG_FILE" 2>&1
+    if [ $? -ne 0 ] ; then
+        ShowLog
+        return 1
+    fi
 
     return 0
 }
