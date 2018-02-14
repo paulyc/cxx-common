@@ -22,17 +22,6 @@ import subprocess
 import tempfile
 import multiprocessing
 
-try:
-  from backports import lzma
-
-except:
-  try:
-    import lzma
-
-  except:
-    print("ERROR: The LZMA module for Python 2 could not be found!")
-    sys.exit(1)
-
 def get_env_compiler_settings():
   cmake_compiler_settings = []
   if os.environ.get("CMAKE_CXX_COMPILER") is not None:
@@ -145,10 +134,19 @@ def extract_gz_tarball(path, folder):
     print(" ! " + str(e))
     return False
 
+# As of now, this is only used by the LLVM installer in unix.py
 def extract_xz_tarball(path, folder):
   try:
-    f = lzma.LZMAFile(path)
+    import lzma
+  except ImportError:
+    try:
+      from backports import lzma
+    except:
+      print("Failed to import the LZMA module")
+      exit(1)
 
+  try:
+    f = lzma.LZMAFile(path)
     tarball = tarfile.open(fileobj=f)
     tarball.extractall(path=folder)
 
