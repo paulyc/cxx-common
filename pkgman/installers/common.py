@@ -167,12 +167,14 @@ def common_installer_xed(properties):
 
   if sys.platform == "linux" or sys.platform == "linux2":
     kit_folder_name += "lin"
+    kit_machine = platform.machine()
 
   elif sys.platform == "darwin":
     kit_folder_name += "mac"
 
   elif sys.platform == "win32" or sys.platform == "cygwin":
     kit_folder_name += "win"
+    kit_machine = "x86-64";
 
   else:
     print(" x Failed to determine the kit name")
@@ -186,7 +188,7 @@ def common_installer_xed(properties):
   except Exception as e:
     print(" x Failed to install the XED library: {}".format(str(e)))
     return False
-
+# xed-install-base-2018-02-14-win-x86-64
   return True
 
 def common_installer_gflags(properties):

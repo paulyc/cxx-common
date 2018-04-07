@@ -23,8 +23,12 @@ def windows_installer_cmake(properties):
   if debug:
     print(" ! Debug build not supported on Windows")
 
-  version = "3.9.3"
-  url = "https://cmake.org/files/v3.9/cmake-" + version + "-win64-x64.zip"
+  version = "3.10.2"
+
+  version_components = version.split(".")
+  short_version = "v" + version_components[0] + "." + version_components[1]
+
+  url = "https://cmake.org/files/" + short_version + "/cmake-" + version + "-win64-x64.zip"
 
   zip_path = download_file(url, "sources")
   if zip_path is None:
