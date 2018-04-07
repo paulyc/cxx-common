@@ -74,7 +74,7 @@ osx_initialize() {
     return 1
   fi
   easy_install pip
-  pip install pyliblzma
+  pip install pyliblzma backports.lzma
 
   printf " > The system has been successfully initialized\n"
   return 0
