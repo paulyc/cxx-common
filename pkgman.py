@@ -32,7 +32,7 @@ def main():
   if get_platform_type() == "windows":
     default_repository_path = "C:\\TrailOfBits\\libraries"
   else:
-    default_repository_path = "/usr/local/lib/trailofbits";
+    default_repository_path = "/opt/trailofbits/libraries";
 
   arg_parser.add_argument("--repository_path", type=str, help="This is where the repository is installed", default=default_repository_path)
 
