@@ -210,7 +210,7 @@ def install_folder(path, destination):
 # same variable, then merge them.
 def merge_cmake_defines(command):
   new_command = []
-  defines = collections.defaultdict([])
+  defines = collections.defaultdict(list)
   defines_index = len(command)
   for i, arg in enumerate(command[1:]):
     if arg.startswith("-D"):
@@ -220,7 +220,7 @@ def merge_cmake_defines(command):
         val = val[1:-1]
       assert not val.startswith('"')
       assert not val.startswith("'")
-      defines[parts[0]] = val
+      defines[parts[0]].append(val)
       defines_index = min(i, defines_index)
     else:
       new_command.append(arg)
