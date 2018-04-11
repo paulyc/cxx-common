@@ -69,7 +69,7 @@ def common_installer_glog(properties):
       print(" x Failed to create the build folder")
       return False
 
-  cmake_command = ["cmake"] + get_env_compiler_settings() + get_cmake_build_type(debug)
+  cmake_command = ["cmake"] + get_env_compiler_settings("glog") + get_cmake_build_type(debug)
   cmake_command += ["-DCMAKE_CXX_STANDARD=11",
                     "-DBUILD_TESTING=OFF",
                     "-DWITH_GFLAGS=ON",
@@ -109,7 +109,7 @@ def common_installer_capstone(properties):
       print(" x Failed to create the build folder")
       return False
 
-  cmake_command = ["cmake"] + get_env_compiler_settings() + get_cmake_build_type(debug)
+  cmake_command = ["cmake"] + get_env_compiler_settings("capstone") + get_cmake_build_type(debug)
   cmake_command += ["-DCMAKE_EXE_LINKER_FLAGS=-g",
                     "-DCMAKE_C_FLAGS=-g",
                     "-DCAPSTONE_ARM_SUPPORT=1",
@@ -208,7 +208,7 @@ def common_installer_gflags(properties):
       return False
 
 
-  cmake_command = ["cmake"] + get_env_compiler_settings() + get_cmake_build_type(debug)
+  cmake_command = ["cmake"] + get_env_compiler_settings("gflags") + get_cmake_build_type(debug)
   cmake_command += ["-DCMAKE_INSTALL_PREFIX=" + os.path.join(repository_path, "gflags"),
                     "-DCMAKE_CXX_STANDARD=11",
                     "-DGFLAGS_BUILD_TESTING=OFF",
@@ -248,7 +248,7 @@ def common_installer_googletest(properties):
       print(" x Failed to create the build folder")
       return False
 
-  cmake_command = ["cmake"] + get_env_compiler_settings() + get_cmake_build_type(debug)
+  cmake_command = ["cmake"] + get_env_compiler_settings("googletest") + get_cmake_build_type(debug)
   cmake_command += ["-DCMAKE_CXX_STANDARD=11",
                     "-DCMAKE_INSTALL_PREFIX=" + os.path.join(repository_path, "googletest"),
                     source_folder]
@@ -302,7 +302,7 @@ def common_installer_protobuf(properties):
       print(" x Failed to create the build folder")
       return False
 
-  cmake_command = ["cmake"] + get_env_compiler_settings() + get_cmake_build_type(debug)
+  cmake_command = ["cmake"] + get_env_compiler_settings("protobuf") + get_cmake_build_type(debug)
   cmake_command += ["-DPROTOBUF_ROOT=" + source_folder,
                     "-DBUILD_SHARED_LIBS=False",
                     "-Dprotobuf_BUILD_TESTS=False",
@@ -370,7 +370,7 @@ def common_installer_capnproto(properties):
       print(" x Failed to create the build folder")
       return False
 
-  cmake_command = ["cmake"] + get_env_compiler_settings() + get_cmake_build_type(debug)
+  cmake_command = ["cmake"] + get_env_compiler_settings("capnproto") + get_cmake_build_type(debug)
   cmake_command += ["-DCMAKE_CXX_STANDARD=11",
                     "-DCMAKE_CXX_EXTENSIONS=ON",
                     "-DBUILD_TESTING=OFF",

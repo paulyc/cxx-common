@@ -181,9 +181,10 @@ def unix_installer_llvm(properties):
 
   destination_path = os.path.join(repository_path, "llvm")
 
-  cmake_command = ["cmake"] + get_env_compiler_settings() + get_cmake_build_type(debug) + ["-DCMAKE_INSTALL_PREFIX=" + os.path.join(repository_path, "llvm"),
-                                                                                           "-DCMAKE_CXX_STANDARD=11", "-DLLVM_TARGETS_TO_BUILD='X86;AArch64'",
-                                                                                           "-DLLVM_INCLUDE_EXAMPLES=OFF", "-DLLVM_INCLUDE_TESTS=OFF"]
+  cmake_command = ["cmake"] + get_env_compiler_settings("llvm") + get_cmake_build_type(debug) + \
+                  ["-DCMAKE_INSTALL_PREFIX=" + os.path.join(repository_path, "llvm"),
+                   "-DCMAKE_CXX_STANDARD=11", "-DLLVM_TARGETS_TO_BUILD='X86;AArch64'",
+                   "-DLLVM_INCLUDE_EXAMPLES=OFF", "-DLLVM_INCLUDE_TESTS=OFF"]
 
   if properties["llvm_version"] < 371:
     cmake_command += ["-DLIBCXX_ENABLE_SHARED=NO"]
@@ -191,6 +192,9 @@ def unix_installer_llvm(properties):
     cmake_command += ["-DLIBCXX_ENABLE_STATIC=YES", "-DLIBCXX_ENABLE_SHARED=YES",
                       "-DLIBCXX_ENABLE_EXPERIMENTAL_LIBRARY=NO",
                       "-LIBCXX_INCLUDE_BENCHMARKS=NO"]
+
+  if properties["asan"]:
+    properties.append("-DLLVM_USE_SANITIZER=Address")
 
   cmake_command += [llvm_root_folder]
 

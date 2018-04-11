@@ -27,6 +27,8 @@ def main():
 
   arg_parser.add_argument("--cxx_compiler", type=str, help="The C++ compiler to use.")
   arg_parser.add_argument('--c_compiler', type=str, help="The C compiler to use.")
+  
+  arg_parser.add_argument("--asan", help="Build address sanitizer versions", action='store_true')
 
   default_repository_path = ""
   if get_platform_type() == "windows":
@@ -93,6 +95,7 @@ def main():
   properties["repository_path"] = args.repository_path
   properties["verbose"] = args.verbose
   properties["debug"] = args.debug
+  properties["asan"] = args.asan
 
   # print a summary of what we are about to do
   print("Repository path: " + args.repository_path)

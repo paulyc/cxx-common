@@ -21,14 +21,20 @@ import shutil
 import subprocess
 import tempfile
 import multiprocessing
+import collections
 
-def get_env_compiler_settings():
+def get_env_compiler_settings(target):
   cmake_compiler_settings = ["-DCMAKE_POSITION_INDEPENDENT_CODE=ON"]
   if os.environ.get("CMAKE_CXX_COMPILER") is not None:
     cmake_compiler_settings.append("-DCMAKE_CXX_COMPILER={}".format(os.environ["CMAKE_CXX_COMPILER"]))
 
   if os.environ.get("CMAKE_C_COMPILER") is not None:
     cmake_compiler_settings.append("-DCMAKE_C_COMPILER={}".format(os.environ["CMAKE_C_COMPILER"]))
+
+  if target != "llvm":
+    cmake_compiler_settings.append('-DCMAKE_CXX_FLAGS=-fno-omit-frame-pointer -fsanitize=address')
+    cmake_compiler_settings.append('-DCMAKE_C_FLAGS=-fno-omit-frame-pointer -fsanitize=address')
+    cmake_compiler_settings.append('-DCMAKE_EXE_LINKER_FLAGS=-fsanitize=address')
 
   return cmake_compiler_settings
 
@@ -200,8 +206,36 @@ def install_folder(path, destination):
     print(" x Installation has failed")
     return False
 
+# Go through a cmake command line invocation, and if we see two defines of the
+# same variable, then merge them.
+def merge_cmake_defines(command):
+  new_command = []
+  defines = collections.defaultdict([])
+  defines_index = len(command)
+  for i, arg in enumerate(command[1:]):
+    if arg.startswith("-D"):
+      parts = arg.split("=")
+      val = "=".join(parts[1:])
+      if val.startswith('"') and val.endswith('"'):
+        val = val[1:-1]
+      assert not val.startswith('"')
+      assert not val.startswith("'")
+      defines[parts[0]] = val
+      defines_index = min(i, defines_index)
+    else:
+      new_command.append(arg)
+
+  if len(defines):
+    for key, vals in defines.items():
+      new_command.insert(defines_index, '{}="{}"'.format(key, " ".join(val)))
+
+  return new_command
+
 def run_program(description, command, working_directory, verbose=False):
   print(" > " + description)
+
+  if command and "cmake" in command[0]:
+    command = merge_cmake_defines(command)
 
   try:
     if verbose:
