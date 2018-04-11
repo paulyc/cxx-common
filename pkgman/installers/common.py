@@ -72,7 +72,7 @@ def common_installer_glog(properties):
   cmake_command = ["cmake"] + get_env_compiler_settings() + get_cmake_build_type(debug)
   cmake_command += ["-DCMAKE_CXX_STANDARD=11",
                     "-DBUILD_TESTING=OFF",
-                    "-DWITH_GFLAGS=OFF",
+                    "-DWITH_GFLAGS=ON",
                     "-DCMAKE_EXE_LINKER_FLAGS=-g",
                     "-DCMAKE_C_FLAGS=-g",
                     "-DCMAKE_INSTALL_PREFIX=" + os.path.join(repository_path, "glog"),
