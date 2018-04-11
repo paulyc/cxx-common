@@ -194,7 +194,7 @@ def unix_installer_llvm(properties):
                       "-LIBCXX_INCLUDE_BENCHMARKS=NO"]
 
   if properties["asan"]:
-    properties.append("-DLLVM_USE_SANITIZER=Address")
+    cmake_command.append("-DLLVM_USE_SANITIZER=Address")
 
   cmake_command += [llvm_root_folder]
 
