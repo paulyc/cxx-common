@@ -23,12 +23,12 @@ import tempfile
 import multiprocessing
 
 def get_env_compiler_settings():
-  cmake_compiler_settings = []
+  cmake_compiler_settings = ["-DCMAKE_POSITION_INDEPENDENT_CODE=ON"]
   if os.environ.get("CMAKE_CXX_COMPILER") is not None:
-    cmake_compiler_settings.append("-DCMAKE_CXX_COMPILER=" + os.environ["CMAKE_CXX_COMPILER"])
+    cmake_compiler_settings.append("-DCMAKE_CXX_COMPILER={}".format(os.environ["CMAKE_CXX_COMPILER"]))
 
   if os.environ.get("CMAKE_C_COMPILER") is not None:
-    cmake_compiler_settings.append("-DCMAKE_C_COMPILER=" + os.environ["CMAKE_C_COMPILER"])
+    cmake_compiler_settings.append("-DCMAKE_C_COMPILER={}".format(os.environ["CMAKE_C_COMPILER"]))
 
   return cmake_compiler_settings
 
