@@ -16,8 +16,8 @@ option(BUILD_TOOLS "" OFF)
 option(BUILD_EXAMPLES "" OFF)
 option(BUILD_TESTING "" OFF)
 
-add_subdirectory("${CCTZ_SOURCE_FOLDER}")
-add_subdirectory("${ABSL_SOURCE_FOLDER}")
+add_subdirectory("${CCTZ_SOURCE_FOLDER}" cctz_bin)
+add_subdirectory("${ABSL_SOURCE_FOLDER}" absl_bin)
 
 set(TARGET_LIST cctz::cctz absl::base absl::algorithm absl::container absl::debugging absl::memory absl::meta absl::numeric absl::strings absl::synchronization absl::time absl::types absl::utility)
 
