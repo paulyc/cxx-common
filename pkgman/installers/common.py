@@ -84,7 +84,8 @@ def google_installer_cctz(properties):
                     "-DBUILD_TOOLS=OFF",
                     "-DBUILD_EXAMPLES=OFF",
                     "-DBUILD_TESTING=OFF",
-                    source_folder]
+                    "-DCCTZ_SOURCE_FOLDER=" + source_folder,
+                    os.path.join("wrappers", "cctz")]
 
   if not run_program("Configuring...", cmake_command, build_folder, verbose=verbose_output):
     return False
