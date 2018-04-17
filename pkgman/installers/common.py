@@ -52,11 +52,17 @@ def get_python_path(version):
   return None
 
 def common_installer_google(properties):
-  google_installer_gflags(properties)
-  google_installer_glog(properties)
-  google_installer_googletest(properties)
-  google_installer_protobuf(properties)
-  google_installer_absl(properties)
+  if not google_installer_gflags(properties):
+    return False
+  if not google_installer_glog(properties):
+    return False
+  if not google_installer_googletest(properties):
+    return False
+  if not google_installer_protobuf(properties):
+    return False
+  if not google_installer_absl(properties):
+    return False
+  return True
 
 def google_installer_absl(properties):
   repository_path = properties["repository_path"]
@@ -72,7 +78,7 @@ def google_installer_absl(properties):
     copy_tree(cctz_source_folder, os.path.join(repository_path, "cctz"))
 
   except:
-    print(" x Failed to copy the CCTZ")
+    print(" x Failed to copy CCTZ")
     return False
 
   absl_source_folder = download_github_source_archive("abseil", "abseil-cpp")
@@ -84,7 +90,7 @@ def google_installer_absl(properties):
     copy_tree(absl_source_folder, os.path.join(repository_path, "absl"))
 
   except:
-    print(" x Failed to copy the Abseil")
+    print(" x Failed to copy Abseil")
     return False
 
   return True
