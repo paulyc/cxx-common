@@ -12,19 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-if(NOT Abseil_FOUND)
-  option(BUILD_TOOLS "" OFF)
-  option(BUILD_EXAMPLES "" OFF)
-  option(BUILD_TESTING "" OFF)
+set(LIBRARY_ROOT "${LIBRARY_REPOSITORY_ROOT}/googletest")
 
-  add_subdirectory("${LIBRARY_REPOSITORY_ROOT}/cctz" cctz_bin)
-  add_subdirectory("${LIBRARY_REPOSITORY_ROOT}/absl" absl_bin)
-endif()
+set(GMock_FOUND TRUE)
+set(GTEST_FOUND TRUE)
+set(GMOCK_LIBRARY ${LIBRARY_ROOT}/lib/libgmock.a)
+set(GMOCK_MAIN_LIBRARY ${LIBRARY_ROOT}/lib/libgmock_main.a)
+set(GMOCK_INCLUDE_DIR "${LIBRARY_ROOT}/include")
 
-set(Abseil_FOUND TRUE)
-set(Abseil_INCLUDE_DIRS "${LIBRARY_REPOSITORY_ROOT}/cctz/include" "${LIBRARY_REPOSITORY_ROOT}/absl")
-
-mark_as_advanced(FORCE Abseil_FOUND)
-mark_as_advanced(FORCE Abseil_INCLUDE_DIRS)
-mark_as_advanced(FORCE Abseil_LIBRARIES)
+mark_as_advanced(FORCE GMock_FOUND)
+mark_as_advanced(FORCE GTEST_FOUND)
+mark_as_advanced(FORCE GMOCK_LIBRARY)
+mark_as_advanced(FORCE GMOCK_MAIN_LIBRARY)
+mark_as_advanced(FORCE GMOCK_INCLUDE_DIR)
 

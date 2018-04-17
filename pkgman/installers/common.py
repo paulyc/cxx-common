@@ -60,6 +60,8 @@ def common_installer_google(properties):
     return False
   if not google_installer_protobuf(properties):
     return False
+  if not google_installer_benchmark(properties):
+    return False
   if not google_installer_absl(properties):
     return False
   return True
@@ -68,18 +70,6 @@ def google_installer_absl(properties):
   repository_path = properties["repository_path"]
   verbose_output = properties["verbose"]
   debug = properties["debug"]
-
-  bench_source_folder = download_github_source_archive("google", "benchmark")
-  if bench_source_folder is None:
-    return False
-
-  try:
-    print(" > Copying the benchmark code...")
-    copy_tree(bench_source_folder, os.path.join(repository_path, "benchmark"))
-
-  except:
-    print(" x Failed to copy benchmark")
-    return False
 
   cctz_source_folder = download_github_source_archive("google", "cctz")
   if cctz_source_folder is None:
@@ -243,6 +233,46 @@ def common_installer_xed(properties):
     print(" x Failed to install the XED library: {}".format(str(e)))
     return False
 # xed-install-base-2018-02-14-win-x86-64
+  return True
+
+def google_installer_benchmark(properties):
+  repository_path = properties["repository_path"]
+  verbose_output = properties["verbose"]
+  debug = properties["debug"]
+
+  source_folder = download_github_source_archive("google", "benchmark")
+  if source_folder is None:
+    return False
+
+  build_folder = os.path.join("build", "benchmark")
+  if not os.path.isdir(build_folder):
+    try:
+      os.mkdir(build_folder)
+
+    except:
+      print(" x Failed to create the build folder")
+      return False
+
+
+  cmake_command = ["cmake"] + get_env_compiler_settings("benchmark") + get_cmake_build_type(debug)
+  cmake_command += ["-DCMAKE_INSTALL_PREFIX=" + os.path.join(repository_path, "benchmark"),
+                    "-DCMAKE_CXX_STANDARD=11",
+                    "-DBENCHMARK_ENABLE_TESTING=OFF",
+                    "-DBENCHMARK_ENABLE_INSTALL=ON",
+                    "-DBENCHMARK_ENABLE_GTEST_TESTS=OFF",
+                    source_folder]
+
+  if not run_program("Configuring...", cmake_command, build_folder, verbose=verbose_output):
+    return False
+
+  cmake_command = ["cmake", "--build", "."] + get_cmake_build_configuration(debug) + [ "--", get_parallel_build_options()]
+  if not run_program("Building...", cmake_command, build_folder, verbose=verbose_output):
+    return False
+
+  cmake_command = ["cmake", "--build", ".", "--target", "install"]
+  if not run_program("Installing...", cmake_command, build_folder, verbose=verbose_output):
+    return False
+
   return True
 
 def google_installer_gflags(properties):

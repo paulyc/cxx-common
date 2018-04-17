@@ -18,7 +18,7 @@ set(GTest_FOUND TRUE)
 set(GTest_INCLUDE_DIRS "${LIBRARY_ROOT}/include")
 
 set(GTest_LIBRARIES
-    ${LIBRARY_ROOT}/lib/libGTest.a
+    ${LIBRARY_ROOT}/lib/libgtest.a
 )
 
 mark_as_advanced(FORCE GTest_FOUND)
