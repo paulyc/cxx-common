@@ -12,17 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(LIBRARY_ROOT "${LIBRARY_REPOSITORY_ROOT}/drdecode")
+if(NOT Abseil_FOUND)
+  option(BUILD_TOOLS "" OFF)
+  option(BUILD_EXAMPLES "" OFF)
+  option(BUILD_TESTING "" OFF)
 
-set(DRDECODE_FOUND TRUE)
-set(DRDECODE_INCLUDE_DIRS "${LIBRARY_ROOT}/include")
+  add_subdirectory("${LIBRARY_REPOSITORY_ROOT}/cctz" cctz_bin)
+  add_subdirectory("${LIBRARY_REPOSITORY_ROOT}/absl" absl_bin)
+endif()
 
-set(DRDECODE_LIBRARIES
-    ${LIBRARY_ROOT}/lib64/release/libdrdecode.a
-    ${LIBRARY_ROOT}/lib64/libdrhelper.a
-)
+set(Abseil_FOUND TRUE)
+set(Abseil_INCLUDE_DIRS "${LIBRARY_REPOSITORY_ROOT}/cctz/include" "${LIBRARY_REPOSITORY_ROOT}/absl")
 
-mark_as_advanced(FORCE DRDECODE_FOUND)
-mark_as_advanced(FORCE DRDECODE_INCLUDE_DIRS)
-mark_as_advanced(FORCE DRDECODE_LIBRARIES)
+mark_as_advanced(FORCE Abseil_FOUND)
+mark_as_advanced(FORCE Abseil_INCLUDE_DIRS)
+mark_as_advanced(FORCE Abseil_LIBRARIES)
 

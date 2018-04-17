@@ -67,37 +67,24 @@ def google_installer_absl(properties):
   if cctz_source_folder is None:
     return False
 
+  try:
+    print(" > Copying the CCTZ code...")
+    copy_tree(cctz_source_folder, os.path.join(repository_path, "cctz"))
+
+  except:
+    print(" x Failed to copy the CCTZ")
+    return False
+
   absl_source_folder = download_github_source_archive("abseil", "abseil-cpp")
   if absl_source_folder is None:
     return False
 
-  build_folder = os.path.join("build", "absl")
-  if not os.path.isdir(build_folder):
-    try:
-      os.mkdir(build_folder)
+  try:
+    print(" > Copying the Abseil code...")
+    copy_tree(absl_source_folder, os.path.join(repository_path, "absl"))
 
-    except:
-      print(" x Failed to create the build folder")
-      return False
-
-  cmake_command = ["cmake"] + get_env_compiler_settings("absl") + get_cmake_build_type(debug)
-  cmake_command += ["-DCMAKE_INSTALL_PREFIX=" + os.path.join(repository_path, "absl"),
-                    "-DCMAKE_CXX_STANDARD=11",
-                    "-DBUILD_TESTING=OFF",
-                    "-DCCTZ_SOURCE_FOLDER=" + cctz_source_folder,
-                    "-DABSL_SOURCE_FOLDER=" + absl_source_folder,
-                    "-DCXX_COMMON_CMAKE_MODULES_DIR=" + os.path.join(properties["repository_path"], "cmake_modules"),
-                    os.path.join(properties["cxx_common_path"], "wrappers", "absl")]
-
-  if not run_program("Configuring...", cmake_command, build_folder, verbose=verbose_output):
-    return False
-
-  cmake_command = ["cmake", "--build", "."] + get_cmake_build_configuration(debug) + [ "--", get_parallel_build_options()]
-  if not run_program("Building...", cmake_command, build_folder, verbose=verbose_output):
-    return False
-
-  cmake_command = ["cmake", "--build", ".", "--target", "install"]
-  if not run_program("Installing...", cmake_command, build_folder, verbose=verbose_output):
+  except:
+    print(" x Failed to copy the Abseil")
     return False
 
   return True
