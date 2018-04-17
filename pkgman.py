@@ -86,6 +86,7 @@ def main():
   properties["llvm_version"] = llvm_version
   properties["long_llvm_version"] = llvm_version[0] + "." + llvm_version[1] + "." + llvm_version[2]
   properties["repository_path"] = args.repository_path
+  properties["cxx_common_path"] = os.path.dirname(os.path.realpath(__file__))
   properties["verbose"] = args.verbose
   properties["debug"] = args.debug
   properties["asan"] = args.asan

@@ -87,7 +87,7 @@ def google_installer_absl(properties):
                     "-DCCTZ_SOURCE_FOLDER=" + cctz_source_folder,
                     "-DABSL_SOURCE_FOLDER=" + absl_source_folder,
                     "-DCXX_COMMON_CMAKE_MODULES_DIR=" + os.path.join(properties["repository_path"], "cmake_modules"),
-                    os.path.join("wrappers", "absl")]
+                    os.path.join(properties["cxx_common_path"], "wrappers", "absl")]
 
   if not run_program("Configuring...", cmake_command, build_folder, verbose=verbose_output):
     return False
