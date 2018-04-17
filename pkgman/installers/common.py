@@ -87,7 +87,7 @@ def google_installer_absl(properties):
                     "-DCCTZ_SOURCE_FOLDER=" + cctz_source_folder,
                     "-DABSL_SOURCE_FOLDER=" + absl_source_folder,
                     "-DCXX_COMMON_CMAKE_MODULES_DIR=" + os.path.join(properties["repository_path"], "cmake_modules"),
-                    os.path.join(properties["repository_path"], "wrappers", "absl")]
+                    os.path.join("wrappers", "absl")]
 
   if not run_program("Configuring...", cmake_command, build_folder, verbose=verbose_output):
     return False
@@ -337,7 +337,7 @@ def google_installer_protobuf(properties):
   # this version is too old and doesn't support cmake out of the box
   # so we need to use an external project
   try:
-    copy_tree(os.path.join(properties["repository_path"], "cmake", "protobuf_project"), os.path.join(source_folder, "cmake"))
+    copy_tree(os.path.join("cmake", "protobuf_project"), os.path.join(source_folder, "cmake"))
     print(" > Copying the CMake project...")
 
   except:
