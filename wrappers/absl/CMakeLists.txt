@@ -19,7 +19,7 @@ option(BUILD_TESTING "" OFF)
 add_subdirectory("${CCTZ_SOURCE_FOLDER}" cctz_bin)
 add_subdirectory("${ABSL_SOURCE_FOLDER}" absl_bin)
 
-set(TARGET_LIST cctz::cctz absl::base absl::algorithm absl::container absl::debugging absl::memory absl::meta absl::numeric absl::strings absl::synchronization absl::time absl::types absl::utility)
+set(TARGET_LIST cctz absl_base absl_algorithm absl_container absl_debugging absl_memory absl_meta absl_numeric absl_strings absl_synchronization absl_time absl_types absl_utility)
 
 foreach(lib ${TARGET_LIST})
   install(${lib} EXPORT “Find${lib}“)
