@@ -17,12 +17,13 @@ if(NOT Abseil_FOUND)
   option(BUILD_EXAMPLES "" OFF)
   option(BUILD_TESTING "" OFF)
 
+  add_subdirectory("${LIBRARY_REPOSITORY_ROOT}/benchmark" benchmark_bin)
   add_subdirectory("${LIBRARY_REPOSITORY_ROOT}/cctz" cctz_bin)
   add_subdirectory("${LIBRARY_REPOSITORY_ROOT}/absl" absl_bin)
 endif()
 
 set(Abseil_FOUND TRUE)
-set(Abseil_INCLUDE_DIRS "${LIBRARY_REPOSITORY_ROOT}/cctz/include" "${LIBRARY_REPOSITORY_ROOT}/absl")
+set(Abseil_INCLUDE_DIRS "${LIBRARY_REPOSITORY_ROOT}/cctz/include" "${LIBRARY_REPOSITORY_ROOT}/benchmark/include" "${LIBRARY_REPOSITORY_ROOT}/absl")
 
 mark_as_advanced(FORCE Abseil_FOUND)
 mark_as_advanced(FORCE Abseil_INCLUDE_DIRS)

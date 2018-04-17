@@ -69,6 +69,18 @@ def google_installer_absl(properties):
   verbose_output = properties["verbose"]
   debug = properties["debug"]
 
+  bench_source_folder = download_github_source_archive("google", "benchmark")
+  if bench_source_folder is None:
+    return False
+
+  try:
+    print(" > Copying the benchmark code...")
+    copy_tree(bench_source_folder, os.path.join(repository_path, "benchmark"))
+
+  except:
+    print(" x Failed to copy benchmark")
+    return False
+
   cctz_source_folder = download_github_source_archive("google", "cctz")
   if cctz_source_folder is None:
     return False
