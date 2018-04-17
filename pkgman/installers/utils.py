@@ -212,22 +212,35 @@ def merge_cmake_defines(command):
   new_command = []
   defines = collections.defaultdict(list)
   defines_index = len(command)
-  for i, arg in enumerate(command[1:]):
+  needs_merge = False
+  for i, arg in enumerate(command):
     if arg.startswith("-D"):
       parts = arg.split("=")
       val = "=".join(parts[1:])
       if val.startswith('"') and val.endswith('"'):
         val = val[1:-1]
-      assert not val.startswith('"')
-      assert not val.startswith("'")
+      elif val.startswith("'") and val.endswith("'"):
+        assert '"' not in val
+        val = val[1:-1]
+      try:
+        assert not val.startswith('"')
+        assert not val.startswith("'")
+      except:
+        print(" ! Unexpected format for CMake-defined value: {}".format(val))
+        raise
       defines[parts[0]].append(val)
       defines_index = min(i, defines_index)
+      needs_merge = 1 < len(defines[parts[0]])
     else:
       new_command.append(arg)
 
-  if len(defines):
-    for key, vals in defines.items():
-      new_command.insert(defines_index, '{}="{}"'.format(key, " ".join(val)))
+  if not needs_merge:
+    return command
+
+  for key, vals in defines.items():
+    new_command.insert(defines_index, '{}="{}"'.format(key, " ".join(val)))
+
+  print(" ! Merged command: {}".format(repr(new_command)))
 
   return new_command
 

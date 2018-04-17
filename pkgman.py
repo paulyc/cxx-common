@@ -71,13 +71,6 @@ def main():
   # acquire the package list
   packages_to_install = args.packages.split(",")
 
-  # If we're installing glog, then make sure we also get gflags.
-  if "glog" in packages_to_install:
-    packages_to_install = set(packages_to_install)
-    packages_to_install.remove("gflags")
-    packages_to_install = list(packages_to_install)
-    packages_to_install.insert(packages_to_install.index("glog"), "gflags")
-
   for package in packages_to_install:
     if package not in package_list:
       print("Invalid package: " + package)

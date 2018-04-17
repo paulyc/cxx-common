@@ -51,7 +51,93 @@ def get_python_path(version):
 
   return None
 
-def common_installer_glog(properties):
+def common_installer_google(properties):
+  google_installer_gflags(properties)
+  google_installer_glog(properties)
+  google_installer_googletest(properties)
+  google_installer_protobuf(properties)
+  google_installer_cctz(properties)
+  google_installer_absl(properties)
+
+def google_installer_cctz(properties):
+  repository_path = properties["repository_path"]
+  verbose_output = properties["verbose"]
+  debug = properties["debug"]
+
+  source_folder = download_github_source_archive("google", "cctz")
+  if source_folder is None:
+    return False
+
+  build_folder = os.path.join("build", "cctz")
+  if not os.path.isdir(build_folder):
+    try:
+      os.mkdir(build_folder)
+
+    except:
+      print(" x Failed to create the build folder")
+      return False
+
+
+  cmake_command = ["cmake"] + get_env_compiler_settings("cctz") + get_cmake_build_type(debug)
+  cmake_command += ["-DCMAKE_INSTALL_PREFIX=" + os.path.join(repository_path, "cctz"),
+                    "-DCMAKE_CXX_STANDARD=11",
+                    "-DBUILD_TOOLS=OFF",
+                    "-DBUILD_EXAMPLES=OFF",
+                    "-DBUILD_TESTING=OFF",
+                    source_folder]
+
+  if not run_program("Configuring...", cmake_command, build_folder, verbose=verbose_output):
+    return False
+
+  cmake_command = ["cmake", "--build", "."] + get_cmake_build_configuration(debug) + [ "--", get_parallel_build_options()]
+  if not run_program("Building...", cmake_command, build_folder, verbose=verbose_output):
+    return False
+
+  cmake_command = ["cmake", "--build", ".", "--target", "install"]
+  if not run_program("Installing...", cmake_command, build_folder, verbose=verbose_output):
+    return False
+
+  return True
+
+def google_installer_absl(properties):
+  repository_path = properties["repository_path"]
+  verbose_output = properties["verbose"]
+  debug = properties["debug"]
+
+  source_folder = download_github_source_archive("abseil", "abseil-cpp")
+  if source_folder is None:
+    return False
+
+  build_folder = os.path.join("build", "absl")
+  if not os.path.isdir(build_folder):
+    try:
+      os.mkdir(build_folder)
+
+    except:
+      print(" x Failed to create the build folder")
+      return False
+
+
+  cmake_command = ["cmake"] + get_env_compiler_settings("absl") + get_cmake_build_type(debug)
+  cmake_command += ["-DCMAKE_INSTALL_PREFIX=" + os.path.join(repository_path, "absl"),
+                    "-DCMAKE_CXX_STANDARD=11",
+                    "-DBUILD_TESTING=OFF",
+                    source_folder]
+
+  if not run_program("Configuring...", cmake_command, build_folder, verbose=verbose_output):
+    return False
+
+  cmake_command = ["cmake", "--build", "."] + get_cmake_build_configuration(debug) + [ "--", get_parallel_build_options()]
+  if not run_program("Building...", cmake_command, build_folder, verbose=verbose_output):
+    return False
+
+  cmake_command = ["cmake", "--build", ".", "--target", "install"]
+  if not run_program("Installing...", cmake_command, build_folder, verbose=verbose_output):
+    return False
+
+  return True
+
+def google_installer_glog(properties):
   repository_path = properties["repository_path"]
   verbose_output = properties["verbose"]
   debug = properties["debug"]
@@ -189,7 +275,7 @@ def common_installer_xed(properties):
 # xed-install-base-2018-02-14-win-x86-64
   return True
 
-def common_installer_gflags(properties):
+def google_installer_gflags(properties):
   repository_path = properties["repository_path"]
   verbose_output = properties["verbose"]
   debug = properties["debug"]
@@ -230,7 +316,7 @@ def common_installer_gflags(properties):
 
   return True
 
-def common_installer_googletest(properties):
+def google_installer_googletest(properties):
   repository_path = properties["repository_path"]
   verbose_output = properties["verbose"]
   debug = properties["debug"]
@@ -266,7 +352,7 @@ def common_installer_googletest(properties):
 
   return True
 
-def common_installer_protobuf(properties):
+def google_installer_protobuf(properties):
   repository_path = properties["repository_path"]
   verbose_output = properties["verbose"]
   debug = properties["debug"]
